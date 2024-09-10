@@ -1,0 +1,10 @@
+
+vscode:
+  extensions:
+    - ms-vscode.vscode-typescript-nextitory to share the goodness with others.
+
+tasks:
+  - init: npm install -g pnpm && npm install -g n8n && pnpm install -g typescript && pnpm install && pnpm run build
+    command: pnpm run dev
+
+
