@@ -9,7 +9,7 @@ import {
 
 import { ChatBaiduQianfan } from '@langchain/baidu-qianfan';
 
-const modelField: INodeProperties = {
+const qianfanModel: INodeProperties = {
 	displayName: 'Model',
 	name: 'model',
 	type: 'options',
@@ -28,11 +28,50 @@ const modelField: INodeProperties = {
 	default: 'ERNIE-SPEED-8K',
 }
 
+export const qianfanOptions: INodeProperties = {
+	displayName: 'Options',
+	name: 'options',
+	placeholder: 'Add Option',
+	description: 'Additional options to add',
+	type: 'collection',
+	default: {},
+	options: [
+		{
+			displayName: 'Temperature',
+			name: 'temperature',
+			default: 0.95,
+			typeOptions: { maxValue: 1, minValue: 0, numberPrecision: 2 },
+			description:
+				'Amount of randomness injected into the response. Ranges from 0 to 1 (0 is not included). Use temp closer to 0 for analytical / multiple choice, and temp closer to 1 for creative and generative tasks',
+			type: 'number',
+		},
+		{
+			displayName: 'Top P',
+			name: 'topP',
+			default: 0.8,
+			typeOptions: { maxValue: 1, minValue: 0, numberPrecision: 1 },
+			description:
+				'Total probability mass of tokens to consider at each step. Range from 0 to 1.0.',
+			type: 'number',
+		},
+		{
+			displayName: 'Penalty Score',
+			name: 'penaltyScore',
+			type: 'number',
+			default: 1.0,
+			typeOptions: { maxValue: 2, minValue: 1, numberPrecision: 1 },
+			description:
+				'Penalizes repeated tokens according to frequency. Range from 1.0 to 2.0. Defaults to 1.0',
+		},
+	],
+};
+
 export class LmChatQianFan implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'QianFan Chat Model',
 		// eslint-disable-next-line n8n-nodes-base/node-class-description-name-miscased
 		name: 'lmChatQianFan',
+		icon: 'file:qianfan.svg',
 		group: ['transform'],
 		version: 1,
 		description: 'Language Model QianFan',
@@ -58,9 +97,8 @@ export class LmChatQianFan implements INodeType {
 			},
 		],
 		properties: [
-			{
-				...modelField
-			}
+			qianfanModel,
+			qianfanOptions,
 		],
 	};
 
@@ -68,10 +106,17 @@ export class LmChatQianFan implements INodeType {
 		const credentials = await this.getCredentials('lmQianFanApi');
 		const modelName = this.getNodeParameter('model', itemIndex) as string;
 
+		const options = this.getNodeParameter('options', itemIndex, {}) as {
+			temperature?: number;
+			topP?: number;
+			penaltyScore?: number;
+		};
+
 		const model = new ChatBaiduQianfan({
 			qianfanAccessKey: credentials.ak as string,
 			qianfanSecretKey: credentials.sk as string,
 			modelName: modelName,
+			...options,
 		});
 
 		return {
