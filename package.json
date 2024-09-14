@@ -1,12 +1,17 @@
 {
   "name": "n8n-nodes-llms-qianfan",
-  "version": "0.1.0",
-  "description": "a n8n node for baidu qianfan",
+  "version": "0.2.0",
+  "description": "A custom n8n node to integrate and leverage the Baidu Qianfan model, enabling users to access powerful AI capabilities directly within their n8n workflows. The node facilitates seamless interactions with Baidu's big model for natural language processing, image recognition, and other AI-driven tasks.",
   "keywords": [
-    "n8n-community-node-package"
+    "n8n-community-node-package",
+    "Qianfan",
+    "n8n",
+    "AI",
+    "Baidu",
+    "llm"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/htynkn/n8n-nodes-llms-qianfan",
   "author": {
     "name": "htynkn",
     "email": "htynkn@gmail.com"
