@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-llms-qianfan",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A custom n8n node to integrate and leverage the Baidu Qianfan model, enabling users to access powerful AI capabilities directly within their n8n workflows. The node facilitates seamless interactions with Baidu's big model for natural language processing, image recognition, and other AI-driven tasks.",
   "keywords": [
     "n8n-community-node-package",
@@ -60,6 +60,7 @@
     "n8n-workflow": "*"
   },
   "dependencies": {
+    "@baiducloud/qianfan": "^0.1.9",
     "@langchain/baidu-qianfan": "^0.0.3",
     "install": "^0.13.0"
   }
