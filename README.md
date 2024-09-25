@@ -54,3 +54,4 @@ To access the Qianfan big model securely, you need to use security authenticatio
 
 * 0.1.0 something just works
 * 0.2.0 add more model options
+* 0.3.0 add model list
