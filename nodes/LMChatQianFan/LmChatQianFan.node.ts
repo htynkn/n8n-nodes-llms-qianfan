@@ -5,27 +5,33 @@ import {
 	type INodeType,
 	type INodeTypeDescription,
 	type SupplyData,
+	ILoadOptionsFunctions,
 } from 'n8n-workflow';
 
+import { consoleAction, setEnvVariable } from "@baiducloud/qianfan";
 import { ChatBaiduQianfan } from '@langchain/baidu-qianfan';
 
 const qianfanModel: INodeProperties = {
 	displayName: 'Model',
+	type: 'resourceLocator',
 	name: 'model',
-	type: 'options',
-	// eslint-disable-next-line n8n-nodes-base/node-param-options-type-unsorted-items
-	options: [
+	modes: [
 		{
-			name: 'ERNIE-SPEED-8K',
-			value: 'ERNIE-SPEED-8K',
+			displayName: 'From List',
+			name: 'list',
+			type: 'list',
+			typeOptions: {
+				searchListMethod: 'qianfanModelSearch',
+			},
 		},
 		{
-			name: 'ERNIE-SPEED-128K',
-			value: 'ERNIE-SPEED-128K',
+			displayName: 'ID',
+			name: 'id',
+			type: 'string',
 		},
 	],
 	description: 'The model which will generate the completion',
-	default: 'ERNIE-SPEED-8K',
+	default: { mode: 'id', value: 'ERNIE-SPEED-8K' },
 }
 
 export const qianfanOptions: INodeProperties = {
@@ -102,9 +108,47 @@ export class LmChatQianFan implements INodeType {
 		],
 	};
 
+	methods = {
+		listSearch: {
+			async qianfanModelSearch(this: ILoadOptionsFunctions) {
+				const results = [];
+				const credentials = await this.getCredentials('lmQianFanApi');
+
+				setEnvVariable('QIANFAN_ACCESS_KEY', credentials.ak as string);
+				setEnvVariable('QIANFAN_SECRET_KEY', credentials.sk as string);
+
+				const res = await consoleAction({
+					base_api_route: '/v2/service', action: 'DescribePresetServices', data: {
+						"serviceType": ["chat"]
+					}
+				});
+
+
+				if (res && res.result && res.result.serviceList) {
+					for (const model of res.result.serviceList) {
+						results.push({
+							name: model.name + ' - ' + model.chargeStatus,
+							value: model.name,
+						});
+					}
+				} else {
+					results.push({
+						name: "Loading failed",
+						value: "Loading failed",
+					});
+				}
+
+				return { results };
+			},
+		},
+	};
+
+
 	async supplyData(this: IExecuteFunctions, itemIndex: number): Promise<SupplyData> {
 		const credentials = await this.getCredentials('lmQianFanApi');
-		const modelName = this.getNodeParameter('model', itemIndex) as string;
+		const modelName = this.getNodeParameter('model', itemIndex, '', {
+			extractValue: true,
+		}) as string;
 
 		const options = this.getNodeParameter('options', itemIndex, {}) as {
 			temperature?: number;

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@baiducloud/qianfan':
+        specifier: ^0.1.9
+        version: 0.1.9(@babel/core@7.25.2)
       '@langchain/baidu-qianfan':
         specifier: ^0.0.3
         version: 0.0.3(@babel/core@7.25.2)(openai@4.58.2(zod@3.23.8))
@@ -1122,7 +1125,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
